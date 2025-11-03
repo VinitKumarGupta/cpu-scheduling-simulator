@@ -263,7 +263,26 @@ class CPUSchedulerApp:
         self.ax.set_title("Gantt Chart", color=self.current_theme['plot_text'], fontdict={'fontsize': 14, 'fontweight': 'bold'}); self.ax.grid(axis='x', linestyle='--', color=self.current_theme['plot_grid'])
 
 
-    
+    def load_live_data(self):
+        try:
+            messagebox.showinfo("Loading", "Taking two snapshots of system CPU usage (2 second delay)... Please wait.")
+            live_data = load_live_processes()
+            if not live_data: messagebox.showinfo("Live Data Error", "Could not load any live processes."); return
+
+            self.reset_data()
+            self.input_vars['arrival'].set("0.0"); self.input_vars['burst'].set(""); self.input_vars['priority'].set("1")
+
+            for p in live_data: self.processes.append(p)
+            self.current_pid = len(self.processes) + 1; self.input_vars['pid'].set(str(self.current_pid))
+
+            self.update_process_table()
+            messagebox.showinfo("Live Data Loaded", f"Successfully loaded {len(live_data)} processes from OS snapshot.")
+
+            self.run_prediction_report(self.processes)
+            self.run_simulation()
+
+        except ImportError: messagebox.showerror("Error", "The 'psutil' library is not installed. Please run 'pip install psutil'.")
+        except Exception as e: messagebox.showerror("Error", f"Failed to load live data: {e}"); traceback.print_exc()
 
 
     def run_prediction_report(self, processes_list: List[GUIProcess]):
