@@ -411,7 +411,6 @@ class CPUSchedulerApp:
         self.ax.set_xlim(0, final_time * 1.05); self.ax.set_yticks([0.5]); self.ax.set_yticklabels(["CPU"], color=self.current_theme['plot_text'])
         self.ax.tick_params(axis='x', colors=self.current_theme['plot_text']); self.ax.grid(axis='x', linestyle='--', color=self.current_theme['plot_grid']); self.ax.set_xlabel("Time (ms)", color=self.current_theme['plot_text']); self.canvas.draw()
 
-
     def export_results_ui(self):
         """Run a simulation and export results using the utility function `export_results` imported from utils.
         Renamed from `export_results` to avoid confusion between method and utility function name.
